@@ -35,6 +35,15 @@ public class PalindromeCheckerApp {
             System.out.println(userInput + " is not a palindrome.");
         }
         scanner.close();
+
+        // UC4 – Character Array Based Palindrome Check
+        String uc4Word = "level";
+        System.out.println("UC4 - Character Array Check for: " + uc4Word);
+        if (isPalindromeCharArray(uc4Word)) {
+            System.out.println("Result: It is a Palindrome (using char array)");
+        } else {
+            System.out.println("Result: It is not a Palindrome (using char array)");
+        }
     }
 
     /**
@@ -47,6 +56,25 @@ public class PalindromeCheckerApp {
         int right = str.length() - 1;
         while (left < right) {
             if (str.charAt(left) != str.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+
+    /**
+     * UC4: Checks if a given string is a palindrome using char array and two-pointer technique.
+     * @param str the string to check
+     * @return true if the string is a palindrome, false otherwise
+     */
+    public static boolean isPalindromeCharArray(String str) {
+        char[] chars = str.toCharArray();
+        int left = 0;
+        int right = chars.length - 1;
+        while (left < right) {
+            if (chars[left] != chars[right]) {
                 return false;
             }
             left++;
