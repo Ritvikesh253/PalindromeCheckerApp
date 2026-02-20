@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import java.util.Stack;
+import java.util.Queue;
+import java.util.LinkedList;
 
 /**
  * PalindromeCheckerApp - A console application for checking palindromes.
@@ -54,6 +56,15 @@ public class PalindromeCheckerApp {
         } else {
             System.out.println("Result: It is not a Palindrome (using stack)");
         }
+
+        // UC6 – Queue + Stack Based Palindrome Check
+        String uc6Word = "deed";
+        System.out.println("UC6 - Queue + Stack Check for: " + uc6Word);
+        if (isPalindromeQueueStack(uc6Word)) {
+            System.out.println("Result: It is a Palindrome (using queue and stack)");
+        } else {
+            System.out.println("Result: It is not a Palindrome (using queue and stack)");
+        }
     }
 
     /**
@@ -105,6 +116,26 @@ public class PalindromeCheckerApp {
         }
         for (char c : str.toCharArray()) {
             if (c != stack.pop()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * UC6: Checks if a given string is a palindrome using a queue and a stack.
+     * @param str the string to check
+     * @return true if the string is a palindrome, false otherwise
+     */
+    public static boolean isPalindromeQueueStack(String str) {
+        Queue<Character> queue = new LinkedList<>();
+        Stack<Character> stack = new Stack<>();
+        for (char c : str.toCharArray()) {
+            queue.add(c);
+            stack.push(c);
+        }
+        while (!queue.isEmpty()) {
+            if (queue.poll() != stack.pop()) {
                 return false;
             }
         }
