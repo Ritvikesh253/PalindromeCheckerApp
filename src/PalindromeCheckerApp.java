@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Stack;
 
 /**
  * PalindromeCheckerApp - A console application for checking palindromes.
@@ -44,6 +45,15 @@ public class PalindromeCheckerApp {
         } else {
             System.out.println("Result: It is not a Palindrome (using char array)");
         }
+
+        // UC5 – Stack-Based Palindrome Checker
+        String uc5Word = "civic";
+        System.out.println("UC5 - Stack-Based Check for: " + uc5Word);
+        if (isPalindromeStack(uc5Word)) {
+            System.out.println("Result: It is a Palindrome (using stack)");
+        } else {
+            System.out.println("Result: It is not a Palindrome (using stack)");
+        }
     }
 
     /**
@@ -79,6 +89,24 @@ public class PalindromeCheckerApp {
             }
             left++;
             right--;
+        }
+        return true;
+    }
+
+    /**
+     * UC5: Checks if a given string is a palindrome using a stack.
+     * @param str the string to check
+     * @return true if the string is a palindrome, false otherwise
+     */
+    public static boolean isPalindromeStack(String str) {
+        Stack<Character> stack = new Stack<>();
+        for (char c : str.toCharArray()) {
+            stack.push(c);
+        }
+        for (char c : str.toCharArray()) {
+            if (c != stack.pop()) {
+                return false;
+            }
         }
         return true;
     }
