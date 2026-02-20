@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 /**
  * PalindromeCheckerApp - A console application for checking palindromes.
  * Version: 1.0
@@ -22,6 +24,17 @@ public class PalindromeCheckerApp {
         } else {
             System.out.println("Result : It is not a Palindrome");
         }
+
+        // UC3: User input palindrome check
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a string to check if it's a palindrome: ");
+        String userInput = scanner.nextLine();
+        if (isPalindrome(userInput)) {
+            System.out.println(userInput + " is a palindrome.");
+        } else {
+            System.out.println(userInput + " is not a palindrome.");
+        }
+        scanner.close();
     }
 
     /**
