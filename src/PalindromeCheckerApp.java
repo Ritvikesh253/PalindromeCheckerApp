@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.util.Deque;
 
 /**
  * PalindromeCheckerApp - A console application for checking palindromes.
@@ -64,6 +65,15 @@ public class PalindromeCheckerApp {
             System.out.println("Result: It is a Palindrome (using queue and stack)");
         } else {
             System.out.println("Result: It is not a Palindrome (using queue and stack)");
+        }
+
+        // UC7 – Deque-Based Optimized Palindrome Checker
+        String uc7Word = "kayak";
+        System.out.println("UC7 - Deque-Based Check for: " + uc7Word);
+        if (isPalindromeDeque(uc7Word)) {
+            System.out.println("Result: It is a Palindrome (using deque)");
+        } else {
+            System.out.println("Result: It is not a Palindrome (using deque)");
         }
     }
 
@@ -136,6 +146,24 @@ public class PalindromeCheckerApp {
         }
         while (!queue.isEmpty()) {
             if (queue.poll() != stack.pop()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * UC7: Checks if a given string is a palindrome using a deque.
+     * @param str the string to check
+     * @return true if the string is a palindrome, false otherwise
+     */
+    public static boolean isPalindromeDeque(String str) {
+        Deque<Character> deque = new LinkedList<>();
+        for (char c : str.toCharArray()) {
+            deque.addLast(c);
+        }
+        while (deque.size() > 1) {
+            if (deque.removeFirst() != deque.removeLast()) {
                 return false;
             }
         }
