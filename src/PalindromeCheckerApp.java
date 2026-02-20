@@ -1,36 +1,48 @@
 
+
 import java.util.Scanner;
 
-    public class PalindromeCheckerApp {
+public class PalindromeCheckerApp {
 
+    // main method: entry point of the application
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        public static void main(String[] args) {
-            Scanner scanner = new Scanner(System.in);
+        System.out.println("=======================================");
+        System.out.println("   Palindrome Checker App - Use Case 4 ");
+        System.out.println("=======================================");
+        System.out.print("input:");
 
-            System.out.println("=======================================");
-            System.out.println("   Palindrome Checker App - Use Case 3 ");
-            System.out.println("=======================================");
-            System.out.print("Enter a word to check: ");
+        // Take input from user
+        String word = scanner.nextLine();
 
+        // Convert string to character array
+        char[] charArray = word.toCharArray();
 
-            String original = scanner.nextLine();
+        // Two-pointer approach
+        int left = 0;
+        int right = charArray.length - 1;
+        boolean isPalindrome = true;
 
-
-            String reversed = "";
-            for (int i = original.length() - 1; i >= 0; i--) {
-                reversed = reversed + original.charAt(i); // String concatenation
+        while (left < right) {
+            if (charArray[left] != charArray[right]) {
+                isPalindrome = false;
+                break;
             }
-
-
-            if (original.equals(reversed)) {
-                System.out.println("Result: \"" + original + "\" is a palindrome.");
-            } else {
-                System.out.println("Result: \"" + original + "\" is NOT a palindrome.");
-            }
-
-            System.out.println("---------------------------------------");
-            System.out.println("Program exited successfully.");
-
-            scanner.close();
+            left++;
+            right--;
         }
+
+        // Display result
+        if (isPalindrome) {
+            System.out.println("Is a palindrome?:True");
+        } else {
+            System.out.println("Is a palindrome?:False");
+        }
+
+        System.out.println("---------------------------------------");
+        System.out.println("Program exited successfully.");
+
+        scanner.close();
     }
+}
