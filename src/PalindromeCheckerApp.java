@@ -1,20 +1,21 @@
 import java.util.Scanner;
 
 /**
- * UC10 - Case-Insensitive and Space-Ignored Palindrome Checker.
+ * UC11 - Object-Oriented Palindrome Service.
  * Version: 1.0
  */
 public class PalindromeCheckerApp {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        PalindromeCheckerService palindromeService = new PalindromeCheckerService();
 
         System.out.println("========================================");
-        System.out.println("  Palindrome Checker App - Use Case 10  ");
+        System.out.println("  Palindrome Checker App - Use Case 11  ");
         System.out.println("========================================");
         System.out.print("Input: ");
 
         String input = scanner.nextLine();
-        boolean result = isNormalizedPalindrome(input);
+        boolean result = palindromeService.checkPalindrome(input);
 
         if (result) {
             System.out.println("Result: It is a Palindrome");
@@ -26,23 +27,23 @@ public class PalindromeCheckerApp {
     }
 
     /**
-     * Normalizes text by removing spaces and lowercasing,
-     * then checks palindrome using two pointers.
+     * Encapsulated palindrome service class.
+     * Single responsibility: check whether text is palindrome.
      */
-    public static boolean isNormalizedPalindrome(String text) {
-        String normalized = text.replaceAll("\\s+", "").toLowerCase();
+    static class PalindromeCheckerService {
+        public boolean checkPalindrome(String text) {
+            int left = 0;
+            int right = text.length() - 1;
 
-        int left = 0;
-        int right = normalized.length() - 1;
-
-        while (left < right) {
-            if (normalized.charAt(left) != normalized.charAt(right)) {
-                return false;
+            while (left < right) {
+                if (text.charAt(left) != text.charAt(right)) {
+                    return false;
+                }
+                left++;
+                right--;
             }
-            left++;
-            right--;
-        }
 
-        return true;
+            return true;
+        }
     }
 }
