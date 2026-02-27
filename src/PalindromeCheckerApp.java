@@ -1,20 +1,20 @@
 import java.util.Scanner;
 
 /**
- * UC9 - Recursive Palindrome Checker.
+ * UC10 - Case-Insensitive and Space-Ignored Palindrome Checker.
  * Version: 1.0
  */
 public class PalindromeCheckerApp {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=======================================");
-        System.out.println("  Palindrome Checker App - Use Case 9  ");
-        System.out.println("=======================================");
+        System.out.println("========================================");
+        System.out.println("  Palindrome Checker App - Use Case 10  ");
+        System.out.println("========================================");
         System.out.print("Input: ");
 
         String input = scanner.nextLine();
-        boolean result = isPalindromeRecursive(input, 0, input.length() - 1);
+        boolean result = isNormalizedPalindrome(input);
 
         if (result) {
             System.out.println("Result: It is a Palindrome");
@@ -26,18 +26,23 @@ public class PalindromeCheckerApp {
     }
 
     /**
-     * Recursively compares start and end characters.
-     * Base condition stops recursion when pointers meet/cross.
+     * Normalizes text by removing spaces and lowercasing,
+     * then checks palindrome using two pointers.
      */
-    public static boolean isPalindromeRecursive(String text, int left, int right) {
-        if (left >= right) {
-            return true;
+    public static boolean isNormalizedPalindrome(String text) {
+        String normalized = text.replaceAll("\\s+", "").toLowerCase();
+
+        int left = 0;
+        int right = normalized.length() - 1;
+
+        while (left < right) {
+            if (normalized.charAt(left) != normalized.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
         }
 
-        if (text.charAt(left) != text.charAt(right)) {
-            return false;
-        }
-
-        return isPalindromeRecursive(text, left + 1, right - 1);
+        return true;
     }
 }
