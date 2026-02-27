@@ -1,172 +1,132 @@
 import java.util.Scanner;
-import java.util.Stack;
-import java.util.Queue;
-import java.util.LinkedList;
-import java.util.Deque;
 
 /**
- * PalindromeCheckerApp - A console application for checking palindromes.
+ * UC8 - Linked List Based Palindrome Checker.
  * Version: 1.0
- * This application demonstrates basic palindrome checking functionality.
+ * This use case checks palindrome using a singly linked list.
  */
 public class PalindromeCheckerApp {
+
     /**
-     * Main method - entry point of the application.
+     * Singly linked list node definition.
+     */
+    static class Node {
+        char data;
+        Node next;
+
+        Node(char data) {
+            this.data = data;
+        }
+    }
+
+    /**
+     * Main method for UC8.
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        // UC1 – Application Entry & Welcome Message
-        System.out.println("Welcome to the Palindrome Checker Management System");
-        System.out.println("Version : 1.0");
-        System.out.println("System initialized successfully.");
-
-        // UC2 – Hardcoded Palindrome Check
-        String hardcodedWord = "radar";
-        System.out.println("Hardcoded Word : " + hardcodedWord);
-        if (isPalindrome(hardcodedWord)) {
-            System.out.println("Result : It is a Palindrome");
-        } else {
-            System.out.println("Result : It is not a Palindrome");
-        }
-
-        // UC3: User input palindrome check
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter a string to check if it's a palindrome: ");
-        String userInput = scanner.nextLine();
-        if (isPalindrome(userInput)) {
-            System.out.println(userInput + " is a palindrome.");
+
+        System.out.println("=======================================");
+        System.out.println("  Palindrome Checker App - Use Case 8  ");
+        System.out.println("=======================================");
+        System.out.print("Input: ");
+
+        String input = scanner.nextLine();
+        boolean result = isPalindromeLinkedList(input);
+
+        if (result) {
+            System.out.println("Result: It is a Palindrome");
         } else {
-            System.out.println(userInput + " is not a palindrome.");
+            System.out.println("Result: It is not a Palindrome");
         }
+
         scanner.close();
-
-        // UC4 – Character Array Based Palindrome Check
-        String uc4Word = "level";
-        System.out.println("UC4 - Character Array Check for: " + uc4Word);
-        if (isPalindromeCharArray(uc4Word)) {
-            System.out.println("Result: It is a Palindrome (using char array)");
-        } else {
-            System.out.println("Result: It is not a Palindrome (using char array)");
-        }
-
-        // UC5 – Stack-Based Palindrome Checker
-        String uc5Word = "civic";
-        System.out.println("UC5 - Stack-Based Check for: " + uc5Word);
-        if (isPalindromeStack(uc5Word)) {
-            System.out.println("Result: It is a Palindrome (using stack)");
-        } else {
-            System.out.println("Result: It is not a Palindrome (using stack)");
-        }
-
-        // UC6 – Queue + Stack Based Palindrome Check
-        String uc6Word = "deed";
-        System.out.println("UC6 - Queue + Stack Check for: " + uc6Word);
-        if (isPalindromeQueueStack(uc6Word)) {
-            System.out.println("Result: It is a Palindrome (using queue and stack)");
-        } else {
-            System.out.println("Result: It is not a Palindrome (using queue and stack)");
-        }
-
-        // UC7 – Deque-Based Optimized Palindrome Checker
-        String uc7Word = "kayak";
-        System.out.println("UC7 - Deque-Based Check for: " + uc7Word);
-        if (isPalindromeDeque(uc7Word)) {
-            System.out.println("Result: It is a Palindrome (using deque)");
-        } else {
-            System.out.println("Result: It is not a Palindrome (using deque)");
-        }
     }
 
     /**
-     * Checks if a given string is a palindrome.
-     * @param str the string to check
-     * @return true if the string is a palindrome, false otherwise
+     * Checks if the input string is a palindrome using singly linked list.
+     * Steps:
+     * 1) Convert string to linked list
+     * 2) Find middle using fast and slow pointers
+     * 3) Reverse second half in-place
+     * 4) Compare first half and reversed second half
+     *
+     * Time Complexity: O(n)
+     * Space Complexity: O(n) for linked list node storage
+     *
+     * @param text input text
+     * @return true if palindrome, otherwise false
      */
-    public static boolean isPalindrome(String str) {
-        int left = 0;
-        int right = str.length() - 1;
-        while (left < right) {
-            if (str.charAt(left) != str.charAt(right)) {
+    public static boolean isPalindromeLinkedList(String text) {
+        if (text == null || text.length() <= 1) {
+            return true;
+        }
+
+        Node head = buildLinkedList(text);
+
+        Node slow = head;
+        Node fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        Node secondHalfHead = (fast != null) ? slow.next : slow;
+        Node reversedSecondHalf = reverseList(secondHalfHead);
+
+        Node firstPointer = head;
+        Node secondPointer = reversedSecondHalf;
+
+        while (secondPointer != null) {
+            if (firstPointer.data != secondPointer.data) {
                 return false;
             }
-            left++;
-            right--;
+            firstPointer = firstPointer.next;
+            secondPointer = secondPointer.next;
         }
+
         return true;
     }
 
     /**
-     * UC4: Checks if a given string is a palindrome using char array and two-pointer technique.
-     * @param str the string to check
-     * @return true if the string is a palindrome, false otherwise
+     * Builds a singly linked list from characters of input text.
+     * @param text input text
+     * @return head node
      */
-    public static boolean isPalindromeCharArray(String str) {
-        char[] chars = str.toCharArray();
-        int left = 0;
-        int right = chars.length - 1;
-        while (left < right) {
-            if (chars[left] != chars[right]) {
-                return false;
+    public static Node buildLinkedList(String text) {
+        Node head = null;
+        Node tail = null;
+
+        for (char character : text.toCharArray()) {
+            Node newNode = new Node(character);
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
             }
-            left++;
-            right--;
         }
-        return true;
+
+        return head;
     }
 
     /**
-     * UC5: Checks if a given string is a palindrome using a stack.
-     * @param str the string to check
-     * @return true if the string is a palindrome, false otherwise
+     * Reverses a singly linked list in-place.
+     * @param head head of list
+     * @return new head after reversal
      */
-    public static boolean isPalindromeStack(String str) {
-        Stack<Character> stack = new Stack<>();
-        for (char c : str.toCharArray()) {
-            stack.push(c);
-        }
-        for (char c : str.toCharArray()) {
-            if (c != stack.pop()) {
-                return false;
-            }
-        }
-        return true;
-    }
+    public static Node reverseList(Node head) {
+        Node previous = null;
+        Node current = head;
 
-    /**
-     * UC6: Checks if a given string is a palindrome using a queue and a stack.
-     * @param str the string to check
-     * @return true if the string is a palindrome, false otherwise
-     */
-    public static boolean isPalindromeQueueStack(String str) {
-        Queue<Character> queue = new LinkedList<>();
-        Stack<Character> stack = new Stack<>();
-        for (char c : str.toCharArray()) {
-            queue.add(c);
-            stack.push(c);
+        while (current != null) {
+            Node nextNode = current.next;
+            current.next = previous;
+            previous = current;
+            current = nextNode;
         }
-        while (!queue.isEmpty()) {
-            if (queue.poll() != stack.pop()) {
-                return false;
-            }
-        }
-        return true;
-    }
 
-    /**
-     * UC7: Checks if a given string is a palindrome using a deque.
-     * @param str the string to check
-     * @return true if the string is a palindrome, false otherwise
-     */
-    public static boolean isPalindromeDeque(String str) {
-        Deque<Character> deque = new LinkedList<>();
-        for (char c : str.toCharArray()) {
-            deque.addLast(c);
-        }
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
-                return false;
-            }
-        }
-        return true;
+        return previous;
     }
 }
