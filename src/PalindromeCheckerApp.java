@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.util.Stack;
 
 /**
- * UC12 - Strategy Pattern for Palindrome Algorithms.
+ * UC13 - Performance Comparison of Palindrome Algorithms.
  * Version: 1.0
  */
 public class PalindromeCheckerApp {
@@ -12,83 +12,87 @@ public class PalindromeCheckerApp {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("========================================");
-        System.out.println("  Palindrome Checker App - Use Case 12  ");
+        System.out.println("  Palindrome Checker App - Use Case 13  ");
         System.out.println("========================================");
-        System.out.println("Choose strategy: 1) Stack  2) Deque");
-        System.out.print("Choice: ");
-        int choice = Integer.parseInt(scanner.nextLine());
-
         System.out.print("Input: ");
+
         String input = scanner.nextLine();
+        int iterations = 10000;
 
-        PalindromeStrategy strategy;
-        if (choice == 1) {
-            strategy = new StackStrategy();
-        } else {
-            strategy = new DequeStrategy();
-        }
+        long iterativeTime = benchmarkIterative(input, iterations);
+        long stackTime = benchmarkStack(input, iterations);
+        long dequeTime = benchmarkDeque(input, iterations);
 
-        PalindromeService service = new PalindromeService(strategy);
-        boolean result = service.check(input);
-
-        if (result) {
-            System.out.println("Result: It is a Palindrome");
-        } else {
-            System.out.println("Result: It is not a Palindrome");
-        }
+        System.out.println("\nAlgorithm Performance (nanoseconds):");
+        System.out.println("Iterative Two-Pointer : " + iterativeTime);
+        System.out.println("Stack-Based           : " + stackTime);
+        System.out.println("Deque-Based           : " + dequeTime);
 
         scanner.close();
     }
 
-    /** Strategy interface. */
-    interface PalindromeStrategy {
-        boolean isPalindrome(String text);
+    public static long benchmarkIterative(String text, int iterations) {
+        long start = System.nanoTime();
+        for (int index = 0; index < iterations; index++) {
+            isPalindromeIterative(text);
+        }
+        return System.nanoTime() - start;
     }
 
-    /** Stack-based strategy implementation. */
-    static class StackStrategy implements PalindromeStrategy {
-        @Override
-        public boolean isPalindrome(String text) {
-            Stack<Character> stack = new Stack<>();
-            for (char character : text.toCharArray()) {
-                stack.push(character);
-            }
-            for (char character : text.toCharArray()) {
-                if (character != stack.pop()) {
-                    return false;
-                }
-            }
-            return true;
+    public static long benchmarkStack(String text, int iterations) {
+        long start = System.nanoTime();
+        for (int index = 0; index < iterations; index++) {
+            isPalindromeStack(text);
         }
+        return System.nanoTime() - start;
     }
 
-    /** Deque-based strategy implementation. */
-    static class DequeStrategy implements PalindromeStrategy {
-        @Override
-        public boolean isPalindrome(String text) {
-            Deque<Character> deque = new ArrayDeque<>();
-            for (char character : text.toCharArray()) {
-                deque.addLast(character);
-            }
-            while (deque.size() > 1) {
-                if (!deque.removeFirst().equals(deque.removeLast())) {
-                    return false;
-                }
-            }
-            return true;
+    public static long benchmarkDeque(String text, int iterations) {
+        long start = System.nanoTime();
+        for (int index = 0; index < iterations; index++) {
+            isPalindromeDeque(text);
         }
+        return System.nanoTime() - start;
     }
 
-    /** Runtime strategy injection via constructor. */
-    static class PalindromeService {
-        private final PalindromeStrategy strategy;
+    public static boolean isPalindromeIterative(String text) {
+        int left = 0;
+        int right = text.length() - 1;
 
-        PalindromeService(PalindromeStrategy strategy) {
-            this.strategy = strategy;
+        while (left < right) {
+            if (text.charAt(left) != text.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
         }
 
-        boolean check(String text) {
-            return strategy.isPalindrome(text);
+        return true;
+    }
+
+    public static boolean isPalindromeStack(String text) {
+        Stack<Character> stack = new Stack<>();
+        for (char character : text.toCharArray()) {
+            stack.push(character);
         }
+        for (char character : text.toCharArray()) {
+            if (character != stack.pop()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isPalindromeDeque(String text) {
+        Deque<Character> deque = new ArrayDeque<>();
+        for (char character : text.toCharArray()) {
+            deque.addLast(character);
+        }
+        while (deque.size() > 1) {
+            if (!deque.removeFirst().equals(deque.removeLast())) {
+                return false;
+            }
+        }
+        return true;
     }
 }
